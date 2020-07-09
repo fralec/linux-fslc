@@ -383,6 +383,13 @@ config GPIO_MXC
 	select GPIO_GENERIC
 	select GENERIC_IRQ_CHIP
 
+config GPIO_PPC_4510
+    bool "ppc-4510 GPIO support"
+    depends on ARCH_MXC
+    select GENERIC_IRQ_CHIP
+    help
+      Say yes here to support the ppc-4510 GPIO device
+
 config GPIO_MXS
 	def_bool y
 	depends on ARCH_MXS
