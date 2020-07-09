@@ -559,6 +559,63 @@ config TOUCHSCREEN_LPC32XX
 	  To compile this driver as a module, choose M here: the
 	  module will be called lpc32xx_ts.
 
+config TOUCHSCREEN_GT82x
+    tristate "GT82x for yocto"
+    depends on I2C
+    default n
+    help
+    This is a android driver to support the Gooidx's GT82x and GT813 touchscreen
+    on imx6 platform. The touchscreen support multi-touch as more as ten.
+    Say Y here to enable the driver for the touchscreen on the mx6 board.
+    If unsure, say N.To compile this driver as a module, choose M here:
+    the module will be called gt82x.ko.
+
+config TOUCHSCREEN_GT801
+    tristate "GT801 for yocto"
+    depends on I2C
+    default n
+    help
+    This is a linux driver to support the Gooidx's GT801 touchscreen
+    on imx6 platform. The touchscreen support multi-touch as more as ten.
+    Say Y here to enable the driver for the touchscreen on the mx6 board.
+    If unsure, say N.To compile this driver as a module, choose M here:
+    the module will be called gt801.ko.
+
+config TOUCHSCREEN_PPC4215_ILI2511
+    tristate "PPC4215_ILI2511 for yocto"
+    depends on I2C
+    default n
+    help
+    tristate PPC4215_ILI2511
+
+config TOUCHSCREEN_PPC4215_GT9xx
+    tristate "PPC4215_GT9xx for yocto"
+    depends on I2C
+    default n
+    help
+    tristate PPC4215_GT9xx
+
+config TOUCHSCREEN_PPC4218_Ilitek
+    tristate "TOUCHSCREEN_PPC4218_Ilitek for yocto"
+    depends on I2C
+    default n
+    help
+    tristate TOUCHSCREEN_PPC4218_Ilitek
+	
+config TOUCHSCREEN_GT9xx
+    tristate "GT9xx for yocto"
+    depends on I2C
+    default n
+    help
+    tristate emb2230_touchscreen
+
+config TOUCHSCREEN_VTL_CT36X
+    tristate "CT36X for yocto"
+    depends on I2C
+    default n
+    help
+    tristate VTL touchscreen
+
 config TOUCHSCREEN_MAX11801
 	tristate "MAX11801 based touchscreens"
 	depends on I2C
