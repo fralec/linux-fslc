@@ -412,18 +412,18 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&pinctrl_i2c2>;
 	status = "okay";
-/*
-	hdmi: edid@50 {
+
+	hdmi_edid: edid@50 {
 		compatible = "fsl,imx6-hdmi-i2c";
 		reg = <0x50>;
 	};
-*/
+
 	mega48@60 {
 		compatible = "fsl,mega48-i2c";
 		reg = <0x60>;
 	};
 	
-	pmic: pfuze100@08 {
+	pmic: pfuze100@8 {
 		compatible = "fsl,pfuze100";
 		reg = <0x08>;
 
@@ -539,7 +539,7 @@
 		mclk_source = <0>;
 	};
 
-	egalax_ts@04 {
+	egalax_ts@4 {
 		compatible = "eeti,egalax_ts";
 		reg = <0x04>;
 		interrupt-parent = <&gpio6>;
@@ -569,8 +569,8 @@
 	pinctrl-0 = <&pinctrl_i2c3>;
 	status = "okay";
 
-	ct36x_ts@01 {
-		compatible = "eeti,ct36x_ts";
+	ct36x_ts@1 {
+		compatible = "eeti,gx_ts";
         reg = <0x01>;
         interrupt-parent = <&gpio1>;
         interrupts = <1 3>;//falling edge
@@ -582,7 +582,7 @@
 
 
 	/*add ben vki gt9xx touch*/
-	goodix_ts@14 {
+	goodix_ts@5d {
 		compatible = "goodix,gt9xx";
 		reg = <0x5d>;
 		interrupt-parent = <&gpio1>;
