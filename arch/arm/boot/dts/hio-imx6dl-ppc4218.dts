@@ -12,7 +12,7 @@
 #include "hio-imx6dl-ppc4218.dtsi"
 
 / {
-	model = "Freescale i.MX6 DualLite SABRE Smart Device Board";
+	model = "Freescale i.MX6 DualLite VKI Momentum Device Board";
 	compatible = "fsl,imx6dl-sabresd", "fsl,imx6dl";
 };
 
