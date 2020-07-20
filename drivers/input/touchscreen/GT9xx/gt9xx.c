@@ -1766,6 +1766,7 @@ static s8 gtp_free_io_port(void)
 {
     GTP_GPIO_FREE(gtp_rst_gpio);
     GTP_GPIO_FREE(gtp_int_gpio);
+    return 0;
 }
 
 /*******************************************************

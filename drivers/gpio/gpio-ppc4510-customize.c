@@ -33,8 +33,6 @@
 static int customize_gpio_probe(struct platform_device *pdev)
 {
 	int rst,ret;
-	int LCD_PWREN,DISP0_BLEN;
-	int RTP_RST;
 	struct device_node* np = pdev->dev.of_node;
 	
 	printk("ben: customize_gpio_probe \n");
@@ -42,13 +40,13 @@ static int customize_gpio_probe(struct platform_device *pdev)
 	//LCD
 	rst = of_get_named_gpio(np, "LCD3P3V_Npwren", 0);
 	if (!gpio_is_valid(rst)){
-    	printk("can not find LCD3P3V_Npwren gpio pins\n");
-        return -1;
+		printk("can not find LCD3P3V_Npwren gpio pins\n");
+		return -1;
 	}
-    ret = gpio_request(rst, "LCD3P3V_Npwren");
-    if(ret){
-    	printk("request gpio LCD3P3V_Npwren failed\n");
-        return;
+	ret = gpio_request(rst, "LCD3P3V_Npwren");
+	if(ret){
+		printk("request gpio LCD3P3V_Npwren failed\n");
+		return -1;
   	}
 
 	gpio_direction_output(rst, 0);
@@ -60,13 +58,13 @@ static int customize_gpio_probe(struct platform_device *pdev)
 	//LCD_BL_EN
 	rst = of_get_named_gpio(np, "LCD_BL_EN", 0);
 	if (!gpio_is_valid(rst)){
-    	printk("can not find LCD_BL_EN gpio pins\n");
-        return -1;
+		printk("can not find LCD_BL_EN gpio pins\n");
+		return -1;
 	}
-    ret = gpio_request(rst, "LCD_BL_EN");
-    if(ret){
-    	printk("request gpio LCD_BL_EN failed\n");
-        return;
+	ret = gpio_request(rst, "LCD_BL_EN");
+	if(ret){
+		printk("request gpio LCD_BL_EN failed\n");
+		return -1;
   	}
 
 	gpio_direction_output(rst, 1);
@@ -75,47 +73,47 @@ static int customize_gpio_probe(struct platform_device *pdev)
 	//gpio_set_value(rst, 1);	
 	
 	//VDDLCD_PWREN
-    rst = of_get_named_gpio(np, "VDDLCD_PWREN", 0);
-    if (!gpio_is_valid(rst)){
-        printk("can not find VDDLCD_PWREN gpio pins\n");
-        return -1;
-    }
-    ret = gpio_request(rst, "VDDLCD_PWREN");
-    if(ret){
-        printk("request gpio VDDLCD_PWREN failed\n");
-        return;
-    }
+	rst = of_get_named_gpio(np, "VDDLCD_PWREN", 0);
+	if (!gpio_is_valid(rst)){
+		printk("can not find VDDLCD_PWREN gpio pins\n");
+		return -1;
+	}
+	ret = gpio_request(rst, "VDDLCD_PWREN");
+	if(ret){
+		printk("request gpio VDDLCD_PWREN failed\n");
+		return -1;
+	}
 
-    gpio_direction_output(rst, 1);
+	gpio_direction_output(rst, 1);
 
 	//TP_PWR_EN
-    rst = of_get_named_gpio(np, "TP_PWR_EN", 0);
-    if (!gpio_is_valid(rst)){
+	rst = of_get_named_gpio(np, "TP_PWR_EN", 0);
+	if (!gpio_is_valid(rst)){
 		printk("can not find TP_PWR_EN gpio pins\n");
-        return -1;
-    }
-    ret = gpio_request(rst, "TP_PWR_EN");
-    if(ret){
-        printk("request gpio TP_PWR_EN failed\n");
-        return;
-    }
+		return -1;
+	}
+	ret = gpio_request(rst, "TP_PWR_EN");
+	if(ret){
+		printk("request gpio TP_PWR_EN failed\n");
+		return -1;
+	}
 
-    gpio_direction_output(rst, 1);
+	gpio_direction_output(rst, 1);
 
 	
 	//HUB_reset
-    rst = of_get_named_gpio(np, "HUB_reset", 0);
-    if (!gpio_is_valid(rst)){
+	rst = of_get_named_gpio(np, "HUB_reset", 0);
+	if (!gpio_is_valid(rst)){
 		printk("can not find HUB_reset gpio pins\n");
-        return -1;
-    }
-    ret = gpio_request(rst, "HUB_reset");
-    if(ret){
-        printk("request gpio HUB_reset failed\n");
-        return;
-    }
+		return -1;
+	}
+	ret = gpio_request(rst, "HUB_reset");
+	if(ret){
+		printk("request gpio HUB_reset failed\n");
+		return -1;
+	}
 
-    gpio_direction_output(rst, 0);
+	gpio_direction_output(rst, 0);
 	mdelay(200);
 	gpio_direction_output(rst, 1);
 	
@@ -127,40 +125,40 @@ static int customize_gpio_probe(struct platform_device *pdev)
 static int customize_gpio_remove(struct platform_device *pdev)
 {
 #if 0
-         __novo_gpio_remove(pdev);                                     
-         sysfs_remove_group(&pdev->dev.kobj, &novo_gpio_attr_group);
+		 __novo_gpio_remove(pdev);									 
+		 sysfs_remove_group(&pdev->dev.kobj, &novo_gpio_attr_group);
 #endif
-         return 0;
+		 return 0;
 }
 
 static const struct of_device_id gpio_dt_ids[] = {
-    { .compatible = "customize,gpio", },
-    { /* sentinel */ }
+	{ .compatible = "customize,gpio", },
+	{ /* sentinel */ }
 };
 
 static struct platform_driver customize_gpio_driver = {
-	.probe		= customize_gpio_probe,               
-   	.remove     = customize_gpio_remove,
+	.probe		= customize_gpio_probe,			   
+   	.remove	 = customize_gpio_remove,
 	.driver =
-    {
-        .name = "customize-gpio",
-        .owner = THIS_MODULE,
-        .of_match_table = gpio_dt_ids,
-    }
+	{
+		.name = "customize-gpio",
+		.owner = THIS_MODULE,
+		.of_match_table = gpio_dt_ids,
+	}
 };
 
 static int __init customize_gpio_init(void)
 {
 	int ret;
 
-    printk("customize gpio driver \n");
+	printk("customize gpio driver \n");
 
-   	ret = platform_driver_register(&customize_gpio_driver);            
-    if(ret)
-    	printk("failed to register customize gpio driver \n");
-         
+   	ret = platform_driver_register(&customize_gpio_driver);			
+	if(ret)
+		printk("failed to register customize gpio driver \n");
+		 
 
-	return ret;
+	return ret -1;
 }
 
 static void customize_gpio_exit(void)
