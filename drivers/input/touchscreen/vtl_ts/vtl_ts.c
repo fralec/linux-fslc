@@ -217,7 +217,6 @@ static int vtl_ts_read_xy_data(struct ts_info *ts)
 
 static void vtl_ts_report_xy_coord(struct ts_info *ts)
 {
-	int i, num;
 	int id;
 	int sync;
 	int x, y;
@@ -334,11 +333,9 @@ static void vtl_ts_report_xy_coord(struct ts_info *ts)
 }
 
 
-
-int vtl_ts_suspend(struct i2c_client *client, pm_message_t mesg)
-{
-	struct ts_info *ts;	
-	unsigned char i;
+#ifdef CONFIG_PM_SLEEP
+int vtl_ts_suspend(struct device *dev)
+{	struct ts_info *ts;	
 	ts =pg_ts;
 
 	DEBUG();
@@ -364,11 +361,9 @@ int vtl_ts_suspend(struct i2c_client *client, pm_message_t mesg)
 	
 	return 0;
 }
-
-int vtl_ts_resume(struct i2c_client *client)
+int vtl_ts_resume(struct device *dev)
 {
 	struct ts_info *ts;
-	unsigned char i;	
 	ts =pg_ts;
 
 	DEBUG();
@@ -397,7 +392,7 @@ int vtl_ts_resume(struct i2c_client *client)
 
 	return 0;
 }
-
+#endif
 #ifdef CONFIG_HAS_EARLYSUSPEND
 static void vtl_ts_early_suspend(struct early_suspend *handler)
 {
@@ -496,21 +491,6 @@ static int vtl_ts_init_input_dev(struct ts_info *ts)
 
 	input_set_abs_params(input_dev, ABS_X, 0, 1280/*ts->config_info.screen_max_x*/, 0, 0);
 	input_set_abs_params(input_dev, ABS_Y, 0, 800/*ts->config_info.screen_max_y*/, 0, 0);
-#if GTP_ICS_SLOT_REPORT		
-	//__set_bit(INPUT_PROP_DIRECT, input_dev->propbit);	
-	//input_mt_init_slots(input_dev, TOUCH_POINT_NUM);
-#else
-   // input_dev->keybit[BIT_WORD(BTN_TOUCH)] = BIT_MASK(BTN_TOUCH);
-#endif	
-	#if 0
-	input_set_abs_params(input_dev, ABS_MT_POSITION_X, 0, 1280/*ts->config_info.screen_max_x*/, 0, 0);
-	input_set_abs_params(input_dev, ABS_MT_POSITION_Y, 0, 800/*ts->config_info.screen_max_y*/, 0, 0);
-	//input_set_abs_params(input_dev, ABS_MT_POSITION_X, 0, 32767/*ts->config_info.screen_max_x*/, 0, 0);
-	//input_set_abs_params(input_dev, ABS_MT_POSITION_Y, 0, 32767/*ts->config_info.screen_max_y*/, 0, 0);
-	input_set_abs_params(input_dev, ABS_MT_TRACKING_ID, 0,ts->config_info.touch_point_number, 0, 0);
-	input_set_abs_params(input_dev, ABS_MT_TOUCH_MAJOR, 0, 255, 0, 0);
-	input_set_abs_params(input_dev, ABS_MT_WIDTH_MAJOR, 0, 255, 0, 0);
-#endif
 
 	/* register input device */
 	err = input_register_device(input_dev);
@@ -628,7 +608,6 @@ ERR_IRQ_REQ:
 		ts->driver->proc_entry = NULL;
 	}
 
-ERR_PROC_ENTRY:
 	if(ts->driver->input_dev){
 		input_unregister_device(ts->driver->input_dev);
 		input_free_device(ts->driver->input_dev);
@@ -649,7 +628,6 @@ ERR_TS_CONFIG:
 int vtl_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 {
 	int err = -1;
-	unsigned char chip_id = 0xff;
 	struct ts_info *ts;
 	struct device *dev;
 
@@ -683,10 +661,10 @@ int vtl_ts_probe(struct i2c_client *client, const struct i2c_device_id *id)
 	printk("___%s() end____ \n", __func__);
 	
 	return 0;
-	
-
-
 }
+
+static SIMPLE_DEV_PM_OPS(vtl_ts_pm_ops, vtl_ts_suspend, vtl_ts_resume);
+
 static struct of_device_id ct36x_ts_dt_ids[] = {
 	                { .compatible = "eeti,ct36x_ts" },
 			                { /* sentinel */ }
@@ -696,16 +674,12 @@ struct i2c_driver vtl_ts_driver  = {
 	.driver = {
 		.owner	= THIS_MODULE,
 		.name	= DRIVER_NAME,
-	.of_match_table= of_match_ptr(ct36x_ts_dt_ids),			
+		.pm	= &vtl_ts_pm_ops,	
+		.of_match_table= of_match_ptr(ct36x_ts_dt_ids),			
 	},
 	.id_table	= vtl_ts_id,
 	.probe      	= vtl_ts_probe,
-#ifndef CONFIG_HAS_EARLYSUSPEND
-	.suspend	= vtl_ts_suspend,
-	.resume	    	= vtl_ts_resume,
-#endif
-	.remove 	= vtl_ts_remove,
-
+	.remove 	= vtl_ts_remove
 };
 
 

@@ -570,7 +570,7 @@
 	status = "okay";
 
 	ct36x_ts@1 {
-		compatible = "eeti,gx_ts";
+		compatible = "eeti,ct36x_ts";
         reg = <0x01>;
         interrupt-parent = <&gpio1>;
         interrupts = <1 3>;//falling edge
