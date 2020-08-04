@@ -390,6 +390,13 @@ config GPIO_PPC_4510
     help
       Say yes here to support the ppc-4510 GPIO device
 
+config GPIO_PPC_4515
+    bool "ppc-4515 GPIO support"
+    depends on ARCH_MXC
+    select GENERIC_IRQ_CHIP
+    help
+      Say yes here to support the ppc-4515 GPIO device
+
 config GPIO_MXS
 	def_bool y
 	depends on ARCH_MXS
