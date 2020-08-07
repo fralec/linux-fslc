@@ -2141,7 +2141,7 @@ static ssize_t ilitek_update_with_hex_read(struct file *pFile, char __user *buf,
 				goto out;
 			}
 			else {
-				inode = filp->f_inode;
+				inode = filp->f_path.dentry->d_inode;
 				fsize = inode->i_size;
 
 				tp_log_info("File size:%d \n", (int)fsize);
