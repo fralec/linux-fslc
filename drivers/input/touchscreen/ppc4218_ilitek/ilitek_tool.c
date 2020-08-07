@@ -419,10 +419,13 @@ static void ilitek_printf_sensortest_data(int * short_xdata1, int * short_xdata2
 	struct file *filp;
 	mm_segment_t fs;
 	unsigned char buf[128];
-    struct  timeval   time_now;
+
+	struct timespec64 time_now;
 	struct rtc_time tm; 
-    do_gettimeofday(&time_now);
-	rtc_time_to_tm(time_now.tv_sec, &tm); 
+	
+	ktime_get_real_ts64(&time_now);
+	rtc_time64_to_tm(time_now.tv_sec, &tm);
+
 	tp_log_info("%d_%d_%d_%d_%d_%d\n", (tm.tm_year + 1900), tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	if (short_test_result == 0 && open_test_result == 0 && allnode_test_result ==0) {
 		len = sprintf(buf, "ilitek_sensortest_%d%02d%02d%02d%02d%02d_pass.csv", (tm.tm_year + 1900), tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
@@ -1813,10 +1816,13 @@ static void ilitek_printf_noisefre_data(uint8_t * noisefre_data, struct seq_file
 	struct file *filp;
 	mm_segment_t fs;
 	unsigned char buf[128];
-    struct  timeval   time_now;
+
+	struct timespec64 time_now;
 	struct rtc_time tm; 
-    do_gettimeofday(&time_now);
-	rtc_time_to_tm(time_now.tv_sec, &tm); 
+	
+	ktime_get_real_ts64(&time_now);
+	rtc_time64_to_tm(time_now.tv_sec, &tm);
+
 	tp_log_info("%d_%d_%d_%d_%d_%d\n", (tm.tm_year + 1900), tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	len = sprintf(buf, "ilitek_noisefre_%d%02d%02d%02d%02d%02d_pass.csv", (tm.tm_year + 1900), tm.tm_mon, tm.tm_mday, tm.tm_hour, tm.tm_min, tm.tm_sec);
 	for(j = 0; j < 256; j++) {
@@ -2135,7 +2141,7 @@ static ssize_t ilitek_update_with_hex_read(struct file *pFile, char __user *buf,
 				goto out;
 			}
 			else {
-				inode = filp->f_dentry->d_inode;
+				inode = filp->f_inode;
 				fsize = inode->i_size;
 
 				tp_log_info("File size:%d \n", (int)fsize);

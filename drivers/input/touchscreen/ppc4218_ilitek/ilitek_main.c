@@ -16,7 +16,11 @@
     MA 02110-1301 USA.							     */
 /* ------------------------------------------------------------------------- */
 
+#include <uapi/linux/sched/types.h>
+
 #include "ilitek_ts.h"
+
+
 char ilitek_driver_information[] = {DERVER_VERSION_MAJOR, DERVER_VERSION_MINOR, CUSTOMER_ID, MODULE_ID, PLATFORM_ID, PLATFORM_MODULE, ENGINEER_ID};
 int ilitek_log_level_value = ILITEK_DEFAULT_LOG_LEVEL;
 static bool ilitek_repeat_start = true;
@@ -734,7 +738,6 @@ static int ilitek_set_input_param(void)
 static int ilitek_set_input_param(void)
 {
 	int ret = 0;
-	int i = 0;
 	struct input_dev *input = ilitek_data->input_dev;
 	tp_log_debug("ilitek_set_input_param\n");
 #ifdef ILITEK_USE_MTK_INPUT_DEV
@@ -850,8 +853,6 @@ static int ilitek_touch_down(int id, int x, int y, int pressure) {
 	struct input_dev *input = ilitek_data->input_dev;
 	int tmp_x;
 	int tmp_y;
-	int swap_x;
-	int swap_y;
 	
 #if defined(ILITEK_USE_MTK_INPUT_DEV) || defined(ILITEK_USE_LCM_RESOLUTION)
 	x = (x - ilitek_data->screen_min_x) * TOUCH_SCREEN_X_MAX / (ilitek_data->screen_max_x - ilitek_data->screen_min_x);
@@ -1075,10 +1076,8 @@ static int current_y = 0;
 #define DOUBLE_CLICK_TOTAL_USED_TIME				(DOUBLE_CLICK_NO_TOUCH_TIME + (DOUBLE_CLICK_ONE_CLICK_USED_TIME * 2))
 
 static int ilitek_get_time_diff (struct timeval *past_time) {
-    struct  timeval   time_now;
-    int diff_milliseconds = 0;
-    do_gettimeofday(&time_now);
-    diff_milliseconds += (time_now.tv_sec - past_time->tv_sec)*1000;
+    ktime_t time_now = ktime_get();
+    int diff_milliseconds = (time_now.tv_sec - past_time->tv_sec)*1000;
 	
     if (time_now.tv_usec < past_time->tv_usec) {
         diff_milliseconds -= 1000;
@@ -1694,16 +1693,14 @@ static int ilitek_fb_notifier_callback(struct notifier_block *self,
 	struct fb_event *ev_data = data;
 	int *blank;
 	tp_log_info("FB EVENT event = %ld\n", event);
-	if (ev_data && ev_data->data && event == FB_EARLY_EVENT_BLANK) {
-		blank = ev_data->data;
-		if (*blank == FB_BLANK_UNBLANK || *blank == FB_BLANK_NORMAL) {
-			ilitek_resume();
-		}
-	}
 
 	if (ev_data && ev_data->data && event == FB_EVENT_BLANK) {
 		blank = ev_data->data;
-		if (*blank == FB_BLANK_POWERDOWN) {
+		if (*blank == FB_BLANK_UNBLANK) {
+			ilitek_resume();
+				
+		}
+		else if (*blank == FB_BLANK_POWERDOWN) {
 			ilitek_suspend();
 		}
 	}
