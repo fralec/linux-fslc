@@ -1135,30 +1135,6 @@
 	status = "okay";
 };
 
-&reg_arm {
-       vin-supply = <&sw1a_reg>;
-};
-
-&reg_pu {
-       vin-supply = <&sw1c_reg>;
-};
-
-&reg_soc {
-       vin-supply = <&sw1c_reg>;
-};
-
-&reg_vdd1p1 {
-	vin-supply = <&vgen5_reg>;
-};
-
-&reg_vdd2p5 {
-	vin-supply = <&vgen5_reg>;
-};
-
-&reg_vdd3p0 {
-	vin-supply = <&vgen5_reg>;
-};
-
 &ssi1 {
 	fsl,mode = "i2s-slave";
 	status = "okay";
