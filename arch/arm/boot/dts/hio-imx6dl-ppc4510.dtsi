@@ -1118,21 +1118,22 @@
 };
 
 &uart2 {
-    status = "okay";
-    pinctrl-names = "default";
-    pinctrl-0 = <&pinctrl_uart2>;
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&pinctrl_uart2>;
 };
 
 &uart3 {
-    status = "okay";
-    pinctrl-names = "default";
-    pinctrl-0 = <&pinctrl_uart3>;
+	status = "okay";
+	pinctrl-names = "default";
+	dma-names = "","tx";
+	pinctrl-0 = <&pinctrl_uart3>;
 };
 
 &uart5 {
     status = "okay";
     pinctrl-names = "default";
-	//fsl,uart-has-rtscts;
+    //fsl,uart-has-rtscts;
     pinctrl-0 = <&pinctrl_uart5_1>;
 };
 
