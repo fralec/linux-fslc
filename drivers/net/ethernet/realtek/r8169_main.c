@@ -7042,13 +7042,26 @@ static int rtl_get_ether_clk(struct rtl8169_private *tp)
 	return rc;
 }
 
+extern unsigned char g_mac_addr[6];
+extern unsigned char g_mac2_addr[6];
 static void rtl_init_mac_address(struct rtl8169_private *tp)
 {
 	struct net_device *dev = tp->dev;
 	u8 *mac_addr = dev->dev_addr;
-	int rc;
+	int rc, i;
 
-	rc = eth_platform_get_mac_address(tp_to_dev(tp), mac_addr);
+	//debug ppc-4215/ppc-4217
+	g_mac2_addr[5] = g_mac_addr[1];
+	g_mac2_addr[4] = g_mac_addr[0];
+	g_mac2_addr[3] = g_mac_addr[2];
+	g_mac2_addr[2] = g_mac_addr[3];
+	g_mac2_addr[1] = g_mac_addr[4];
+	g_mac2_addr[0] = g_mac_addr[5];
+	for (i = 0; i < ETH_ALEN; i++)
+		dev->dev_addr[i] = g_mac2_addr[i];
+
+        rc = eth_platform_get_mac_address(tp_to_dev(tp), mac_addr);
+
 	if (!rc)
 		goto done;
 
