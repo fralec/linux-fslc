@@ -210,7 +210,11 @@ static int anatop_regulator_probe(struct platform_device *pdev)
 	if (!initdata)
 		return -ENOMEM;
 
-	initdata->supply_regulator = "vin";
+	if (of_find_property(np, "vin-supply", NULL))
+	{
+		dev_err(dev, "anatop_regulator_probe: supply_regulator = vin\n");
+		initdata->supply_regulator = "vin";
+	}
 
 	anatop_np = of_get_parent(np);
 	if (!anatop_np)
